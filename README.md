@@ -5,6 +5,8 @@
 
 ブラウザだけで動作し、サーバー側の処理はありません（地図タイルの取得にのみインターネット接続を使用）。
 
+**公開サイト**: <https://kazumic.github.io/gsi-map-print-studio/>（インストール不要）
+
 ---
 
 ## 特長
@@ -157,6 +159,17 @@ scripts/
 
 用紙・縮尺・中心座標などの設定は `localStorage`（キー `gsi-map-print-studio:settings:v2`）に保存されます。
 「設定を初期化」で既定値に戻せます。
+
+### 公開（GitHub Pages）
+
+<https://kazumic.github.io/gsi-map-print-studio/> で公開しています。
+
+`main` ブランチへ push すると、GitHub Actions（`.github/workflows/deploy.yml`）が
+テスト → ビルド → GitHub Pages へのデプロイを自動で実行します。
+リポジトリの Settings → Pages では Source を「GitHub Actions」に設定します。
+
+ビルドは `vite.config.ts` の `base: './'` により相対パスで出力されるため、
+`https://<user>.github.io/<repo>/` のようなサブパスでもそのまま動作します。
 
 ---
 
