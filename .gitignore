@@ -1,0 +1,9 @@
+node_modules/
+dist/
+.npm-cache/
+.vite/
+*.local
+.DS_Store
+Thumbs.db
+artifacts/
+.chrome-*/
