@@ -26,7 +26,6 @@ interface ToastState {
 
 export default function App() {
   const [settings, setSettings] = useState<AppSettings>(() => loadSettings())
-  const [recenterNonce, setRecenterNonce] = useState(0)
   const [selectedPage, setSelectedPage] = useState<number | null>(null)
   const [helpOpen, setHelpOpen] = useState(false)
   const [exportProgress, setExportProgress] = useState<ExportProgress | null>(null)
@@ -68,7 +67,6 @@ export default function App() {
 
   const changeCenter = (lat: number, lon: number) => {
     update({ centerLat: lat, centerLon: lon })
-    setRecenterNonce((value) => value + 1)
   }
 
   const runExport = async () => {
@@ -134,7 +132,6 @@ export default function App() {
 
   const reset = () => {
     setSettings({ ...DEFAULT_SETTINGS })
-    setRecenterNonce((value) => value + 1)
     setResetNonce((value) => value + 1)
     setToast({ kind: 'info', title: '設定を初期化しました' })
   }
@@ -162,7 +159,6 @@ export default function App() {
           <MapPreview
             layout={layout}
             settings={settings}
-            recenterNonce={recenterNonce}
             onChangeSettings={update}
             onOpenPage={(index) => setSelectedPage(index)}
           />

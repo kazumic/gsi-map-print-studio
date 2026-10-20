@@ -1376,10 +1376,6 @@ select:focus-visible,
   cursor: grab;
 }
 
-.mode-move .overlay-canvas {
-  cursor: move;
-}
-
 .map-preview.is-dragging .overlay-canvas {
   cursor: grabbing;
 }
