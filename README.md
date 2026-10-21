@@ -33,25 +33,37 @@ npm run dev      # http://127.0.0.1:5173/
 
 ### 別のPCからアクセスする（Tailscale など）
 
-`npm run dev` は全インターフェースで待ち受けるため（`server.host: true`）、同じネットワーク上の端末から
-起動時ログの `Network:` に表示される URL でアクセスできます。
+既定では `npm run dev` は **このPC（127.0.0.1）からのみ** 待ち受けます。
+別の端末から使うときだけ、公開するアドレスを明示してください。
+
+```bash
+# Tailscale の自分のIPだけに公開する例
+npm run dev -- --host 100.x.x.x
+```
+
+起動ログの `Network:` に表示される URL でアクセスできます。
 
 ```text
 ➜  Local:   http://localhost:5173/
 ➜  Network: http://100.x.x.x:5173/      Tailscale
-➜  Network: http://192.168.x.x:5173/    イーサネット
 ```
 
+- `--host` だけを指定すると全インターフェース（0.0.0.0）で待ち受けます。信頼できるネットワーク以外では使わないでください。
+- 開発サーバーはプロジェクト直下のファイルを配信します。`.chrome-*/`（ブラウザプロファイル）や `artifacts/` は `server.fs.deny` で配信対象外にしていますが、**これらはプロジェクト外に置くのが最も安全**です。
 - IP アドレスに加えて、Tailscale の MagicDNS 名（`<PC名>.<tailnet>.ts.net`）でもアクセスできます。
-- `localhost` 以外からも使えるようになったため、HTTP/HTTPS ではなく **http** でアクセスしてください（HTTPS 化はしていません）。
-- Windows ファイアウォールで受信がブロックされる場合は、管理者 PowerShell で該当ポートを許可します。
+- 公開する場合は **http** でアクセスします（開発サーバーはHTTPS化していません）。Tailscale の WireGuard で暗号化されますが、LAN では平文です。
+- Windows ファイアウォールで受信がブロックされる場合は、必要なときだけ、接続元を Tailscale の範囲に限定して許可します。
 
 ```powershell
 New-NetFirewallRule -DisplayName "GSI Map Print Studio (dev)" -Direction Inbound `
-  -Protocol TCP -LocalPort 5173,4173 -Action Allow -Profile Private
+  -Protocol TCP -LocalPort 5173,4173 -Action Allow -Profile Private `
+  -RemoteAddress 100.64.0.0/10
 ```
 
+- LAN の端末に公開する場合は、`-RemoteAddress` をそのサブネット（例: `192.168.1.0/24`）に限定してください。
+- 以前の「Private プロファイル全体を許可する」ルールが残っている場合は、削除してから作り直してください。
 - `strictPort: true` のため、5173 番が使用中だとエラーで停止します（別ポートに自動で切り替わりません）。
+- `npm run preview` も既定はこのPCからのみです。別端末から確認するときは `npm run preview -- --host 100.x.x.x` のように指定します。
 
 ### 1. 用紙と縮尺（01 セクション）
 
